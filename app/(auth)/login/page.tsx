@@ -208,13 +208,13 @@ export default function LoginPage() {
                 { role: "Admin", email: "admin@docuflow.com", color: "text-blue-600" },
                 { role: "Manager", email: "manager@docuflow.com", color: "text-violet-600" },
                 { role: "Approver", email: "approver@docuflow.com", color: "text-emerald-600" },
-                { role: "Submitter", email: "submitter@docuflow.com", color: "text-amber-600" },
+                { role: "Submitter", email: "employee@docuflow.com", color: "text-amber-600" },
               ].map((d) => (
                 <div key={d.role} className="flex items-center justify-between text-xs">
                   <span className={`font-semibold ${d.color}`}>{d.role}</span>
                   <span className="text-muted-foreground font-mono">{d.email}</span>
                   {
-                    d.role === "Admin" ? <span className="text-muted-foreground">/ admin123</span> : <span className="text-muted-foreground">/ password123</span>
+                    d.role === "Admin" ? <span className="text-muted-foreground"> admin123</span> : <span className="text-muted-foreground"> password123</span>
                   }
                 </div>
               ))}
