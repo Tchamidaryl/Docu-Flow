@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { AuditAction, DocumentStatus, NotificationType } from "@prisma/client";
 import { sendNotificationEmail } from "@/lib/email/sender"; // ✅ now exists
+import { sendApprovalRequestEmail } from "../email/emailService";
 
 export interface WorkflowStepSnapshot {
   stepOrder: number;
@@ -104,8 +105,23 @@ export async function submitDocument(ctx: WorkflowContext) {
       if (assigneeId) {
         const user = await prisma.user.findUnique({
           where: { id: assigneeId },
-          select: { name: true },
+          select: { name: true, email: true },
         });
+        if (user?.email) {
+          await sendApprovalRequestEmail(
+            user.email,
+            user.name || 'User',
+            document.title,
+            document.id,
+            submitter.name || 'User',
+            {
+              description: document.description,
+              dueDate: document.dueDate,
+              priority: document.priority,
+            }
+
+          )
+        }
         assigneeName = user?.name ?? null;
       }
       return {

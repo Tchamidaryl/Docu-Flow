@@ -56,6 +56,9 @@ function newStep(): ApproverStep {
   };
 }
 
+const IC =
+    "w-full px-3 py-2.5 text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-foreground";
+
 export default function TemplatesPage() {
   const { data: session }             = useSession();
   const [templates, setTemplates]     = useState<Template[]>([]);
@@ -297,7 +300,7 @@ export default function TemplatesPage() {
                         <span className="text-xs font-medium text-foreground">{step.name}</span>
                         <span className="text-muted-foreground/40">·</span>
                         {step.useManagerOf ? (
-                          <span className="text-xs text-muted-foreground italic">Submitter's manager</span>
+                          <span className="text-xs text-muted-foreground italic">Submitter&apos;s manager</span>
                         ) : user ? (
                           <div className="flex items-center gap-1.5">
                             <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[9px] font-bold text-primary">
@@ -322,7 +325,7 @@ export default function TemplatesPage() {
               <div className="flex items-center gap-4 text-xs text-muted-foreground mt-3 pt-2.5 border-t border-border/50">
                 <span className="flex items-center gap-1"><Users2 className="w-3.5 h-3.5" />{tpl.steps?.length ?? 0} approver{(tpl.steps?.length ?? 0) !== 1 ? "s" : ""}</span>
                 {tpl.slaHours && <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{tpl.slaHours}h SLA</span>}
-                <span className="ml-auto">{tpl._count?.documents ?? 0} doc{(tpl._count?.documents ?? 0) !== 1 ? "s" : ""}</span>
+                <span className="ml-auto">{tpl._count?.documents ?? 0} doc{(tpl._count?.documents ?? 0) > 1 ? "s" : ""}</span>
               </div>
             </div>
           ))}
@@ -424,7 +427,7 @@ export default function TemplatesPage() {
                             <input type="checkbox" checked={step.useManagerOf} className="sr-only"
                               onChange={(e) => updateStep(step.id, { useManagerOf: e.target.checked, assignedUserId: e.target.checked ? "" : step.assignedUserId })} />
                             <div>
-                              <p className="text-xs font-medium">Auto-assign to submitter's manager</p>
+                              <p className="text-xs font-medium">Auto-assign to submitter&apos;s manager</p>
                               <p className="text-[10px] text-muted-foreground">Dynamically resolved when document is submitted</p>
                             </div>
                           </label>
@@ -450,7 +453,7 @@ export default function TemplatesPage() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <p className="text-xs font-semibold truncate">{selectedUser.name}</p>
-                                    <p className="text-[10px] text-muted-foreground">{selectedUser.jobTitle || selectedUser.systemRole.replace("_"," ")} · {selectedUser.department?.name ?? "No dept"}</p>
+                                    <p className="text-[10px] text-muted-foreground">{selectedUser.jobTitle || selectedUser.systemRole.replace("_", " ")} · {selectedUser.department?.name ?? "No dept"}</p>
                                   </div>
                                   <span className={cn("text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0", ROLE_COLORS[selectedUser.systemRole])}>
                                     {selectedUser.systemRole.replace("_"," ")}
@@ -544,4 +547,3 @@ export default function TemplatesPage() {
   );
 }
 
-const IC = "w-full px-3 py-2.5 text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-foreground";

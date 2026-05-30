@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { formatDistanceToNow } from "date-fns";
+import { ThemeToggle } from "../ThemeToggle";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -102,7 +103,7 @@ export default function Header() {
           >
             <Bell className="w-4.5 h-4.5 text-muted-foreground" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-5.5 h-5.5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
@@ -156,6 +157,7 @@ export default function Header() {
             </div>
           )}
         </div>
+        <ThemeToggle />
 
         {/* User menu */}
         <div className="relative" ref={userRef}>

@@ -7,6 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SignatureType {
+  DIGITAL_SIGNATURE
+  APPROVAL_STAMP
+  INITIALS
+  METADATA_ONLY
+}
+
+enum LanguageCode {
+  EN
+  ES
+  FR
+  DE
+  PT
+  ZH
+  AR
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+  BOUNCED
+}
+
 enum SystemRole {
   SUPER_ADMIN
   ADMIN
@@ -76,6 +100,106 @@ enum InviteStatus {
   EXPIRED
 }
 
+model DocumentSignature {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  documentId      String        @db.ObjectId
+  approverId      String        @db.ObjectId
+  signatureType   SignatureType @default(APPROVAL_STAMP)
+  signatureData   String?       // Base64 encoded signature
+  approvalStamp   String?       // Generated approval stamp HTML
+  stampImageUrl   String?       // URL to stamp image
+  signedAt        DateTime      @default(now())
+  pageNumber      Int?
+  positionX       Float?
+  positionY       Float?
+  width           Float?
+  height          Float?
+  metadata        Json?
+  isVerified      Boolean       @default(false)
+  verificationHash String?
+
+  document        Document      @relation("DocumentSignatures", fields: [documentId], references: [id], onDelete: Cascade)
+  approver        User          @relation("UserSignatures", fields: [approverId], references: [id])
+
+  @@map("document_signatures")
+}
+
+model ApprovalMetadata {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  documentId      String        @db.ObjectId
+  approverId      String        @db.ObjectId
+  approvalDate    DateTime      @default(now())
+  approvalText    String
+  statusText      String
+  ipAddress       String?
+  userAgent       String?
+  deviceInfo      String?
+  approverFullName String?
+  approverEmail   String?
+  approverDepartment String?
+  organizationName String?
+
+  document        Document      @relation("ApprovalMetadata", fields: [documentId], references: [id], onDelete: Cascade)
+  approver        User          @relation("UserApprovalMetadata", fields: [approverId], references: [id])
+
+  @@map("approval_metadata")
+}
+
+model UserLanguagePreference {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String        @db.ObjectId @unique
+  language        LanguageCode  @default(EN)
+  timezone        String        @default("UTC")
+  dateFormat      String        @default("MM/DD/YYYY")
+  timeFormat      String        @default("12H")
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_language_preferences")
+}
+
+model EmailLog {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  recipientId     String?       @db.ObjectId
+  recipientEmail  String
+  subject         String
+  template        String
+  status          EmailStatus   @default(PENDING)
+  sentAt          DateTime?
+  failureReason   String?
+  errorCode       String?
+  retryCount      Int           @default(0)
+  maxRetries      Int           @default(3)
+  metadata        Json?
+  documentId      String?       @db.ObjectId
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  recipient       User?         @relation("EmailsSent", fields: [recipientId], references: [id], onDelete: SetNull)
+  document        Document?     @relation("EmailLogs", fields: [documentId], references: [id], onDelete: SetNull)
+
+  @@map("email_logs")
+}
+
+model AuditTrail {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?       @db.ObjectId
+  action          String
+  resourceType    String
+  resourceId      String?
+  changes         Json?
+  ipAddress       String?
+  userAgent       String?
+  status          String        @default("SUCCESS")
+  errorMessage    String?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+
+  user            User?         @relation("AuditTrails", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_trails")
+}
 model Organization {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -126,6 +250,11 @@ model User {
   departmentId   String?    @db.ObjectId
   managerId      String?    @db.ObjectId
   jobTitle       String?
+  languagePreference UserLanguagePreference?
+  signatures          DocumentSignature[]    @relation("UserSignatures")
+  approvalMetadata    ApprovalMetadata[]     @relation("UserApprovalMetadata")
+  emailsSent          EmailLog[]             @relation("EmailsSent")
+  auditTrails         AuditTrail[]           @relation("AuditTrails")
   isActive       Boolean    @default(true)
   lastLoginAt    DateTime?
   preferences    Json       @default("{}")
@@ -291,6 +420,9 @@ model Document {
   dueDate          DateTime?
   version          Int            @default(1)
   isConfidential   Boolean        @default(false)
+  signatures       DocumentSignature[] @relation("DocumentSignatures")
+  approvalMetadata ApprovalMetadata[]  @relation("ApprovalMetadata")
+  emailLogs        EmailLog[]          @relation("EmailLogs")
   expiresAt        DateTime?
   submittedAt      DateTime?
   completedAt      DateTime?
