@@ -10,7 +10,7 @@ import Link from "next/link";
 import {
   FileCheck2, Building2, User, ArrowRight, ArrowLeft,
   Loader2, CheckCircle2, Eye, EyeOff, AlertCircle,
-  Check, X, Info, Shield,
+  Check, X, Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -179,7 +179,7 @@ export default function RegisterPage() {
             <div className="animate-fade-in space-y-4">
               <div>
                 <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>Name your organization</h2>
-                <p className="text-sm text-muted-foreground">This is your team's shared workspace inside DocuFlow.</p>
+                <p className="text-sm text-muted-foreground">This is your team&apos;s shared workspace inside DocuFlow.</p>
               </div>
               <div>
                 <label className="text-sm font-medium mb-1.5 block">Organization Name <span className="text-destructive">*</span></label>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm font-medium mb-1.5 block">First Department <span className="text-xs text-muted-foreground font-normal">(optional)</span></label>
                 <input {...register("departmentName")} placeholder="e.g. Engineering, Operations…" className={IC} />
-                <p className="text-xs text-muted-foreground mt-1">Defaults to "General". More departments added later.</p>
+                <p className="text-xs text-muted-foreground mt-1">Defaults to &ldquo;General&rdquo;. More departments added later.</p>
               </div>
               <button type="button" onClick={goNext} disabled={slugStatus === "checking" || slugStatus === "taken"}
                 className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50">
@@ -223,7 +223,7 @@ export default function RegisterPage() {
               </button>
               <div>
                 <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>Create your admin account</h2>
-                <p className="text-sm text-muted-foreground">You'll manage <strong>{watch("orgName")}</strong> with full admin access.</p>
+                <p className="text-sm text-muted-foreground">You&apos;ll manage <strong>{watch("orgName")}</strong> with full admin access.</p>
               </div>
               <div>
                 <label className="text-sm font-medium mb-1.5 block">Full Name <span className="text-destructive">*</span></label>
@@ -289,7 +289,7 @@ export default function RegisterPage() {
               <div className="w-20 h-20 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="w-10 h-10 text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>You're all set! 🎉</h2>
+              <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>You&apos;re all set! 🎉</h2>
               <p className="text-muted-foreground mb-2"><strong>{createdOrg.name}</strong> has been created.</p>
               <p className="text-sm text-muted-foreground mb-6">
                 Head to <strong>Users</strong> to add your team, then <strong>Templates</strong> to set up approval workflows.
