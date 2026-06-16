@@ -158,6 +158,9 @@ export async function POST(req: NextRequest) {
       });
 
       return { org, adminUser };
+    },
+    {
+      timeout: 30000, // 30 seconds instead of default 5 seconds
     });
 
     return created({
