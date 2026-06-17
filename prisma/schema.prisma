@@ -100,6 +100,12 @@ enum InviteStatus {
   EXPIRED
 }
 
+enum ThemeMode {
+  light
+  dark
+  system
+}
+
 model DocumentSignature {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   documentId      String        @db.ObjectId
@@ -152,6 +158,7 @@ model UserLanguagePreference {
   timezone        String        @default("UTC")
   dateFormat      String        @default("MM/DD/YYYY")
   timeFormat      String        @default("12H")
+  theme           ThemeMode     @default(dark)
   updatedAt       DateTime      @updatedAt
 
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -260,6 +267,7 @@ model User {
   preferences    Json       @default("{}")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
+  uploadedFiles  DocumentFile[]
 
   organization        Organization?    @relation(fields: [organizationId], references: [id])
   department          Department?      @relation(fields: [departmentId], references: [id])
@@ -443,21 +451,20 @@ model Document {
 }
 
 model DocumentFile {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  documentId   String   @db.ObjectId
-  fileName     String
-  originalName String
-  mimeType     String
-  sizeBytes    Int
-  storageUrl   String
-  storageKey   String
-  uploadedById String   @db.ObjectId
-  isPrimary    Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId  String   @db.ObjectId
+  fileName    String
+  fileSize    Int
+  fileType    String
+  fileUrl     String
+  uploadedBy  String?  @db.ObjectId
+  uploader    User?    @relation(fields: [uploadedBy], references: [id])
+  uploadedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
 
-  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-  @@map("document_files")
+  @@index([documentId])
+  @@index([uploadedBy])
 }
 
 model DocumentVersion {

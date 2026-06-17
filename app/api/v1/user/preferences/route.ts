@@ -18,13 +18,16 @@ export async function POST(req: NextRequest) {
         userId: session.user.id,
         language: language || 'EN',
         timezone: timezone || 'UTC',
+        theme: theme || 'dark'
       },
       update: {
         ...(language && { language }),
         ...(timezone && { timezone }),
+        ...(theme && { theme })
       },
     });
 
+    console.log("Posted in DB", preferences);
     return NextResponse.json({ success: true, preferences });
   } catch (error) {
     console.error('Failed to update preferences:', error);
@@ -46,6 +49,7 @@ export async function GET() {
       where: { userId: session.user.id },
     });
 
+    console.log("Fetched from DB", preferences)
     return NextResponse.json(preferences || { language: 'EN', timezone: 'UTC' });
   } catch (error) {
     console.error('Failed to fetch preferences:', error);

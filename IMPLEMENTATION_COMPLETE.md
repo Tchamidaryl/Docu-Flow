@@ -6,60 +6,60 @@
 
 - **File**: `lib/email/resend.ts`
 - **Features**:
-    - Send emails via Resend API
-    - Email logging and tracking
-    - Support for single and bulk email sending
-    - Error handling and retry logic
+  - Send emails via Resend API
+  - Email logging and tracking
+  - Support for single and bulk email sending
+  - Error handling and retry logic
 
 ### 2. **Email Notification System** ✓
 
 - **Files**: `lib/email/sender.ts`, `lib/email/emailService.ts`
 - **Features**:
-    - Approval request emails
-    - Approval notification emails
-    - Rejection notification emails
-    - Revision request emails
-    - Professional HTML email templates
-    - Dynamic email content based on document status
+  - Approval request emails
+  - Approval notification emails
+  - Rejection notification emails
+  - Revision request emails
+  - Professional HTML email templates
+  - Dynamic email content based on document status
 
 ### 3. **Digital Signature System** ✓
 
 - **Files**: `lib/signature/stampGenerator.ts`, `lib/signature/pdfSigner.ts`, `lib/signature/wordSigner.ts`, `lib/signature/excelSigner.ts`
 - **Features**:
-    - SVG/HTML stamp generation
-    - PDF signature integration
-    - Word document signing
-    - Excel signature sheets
-    - Metadata tracking for signatures
-    - Support for multiple signatures per document
+  - SVG/HTML stamp generation
+  - PDF signature integration
+  - Word document signing
+  - Excel signature sheets
+  - Metadata tracking for signatures
+  - Support for multiple signatures per document
 
 ### 4. **Document Download Feature** ✓
 
 - **Files**: `app/api/v1/documents/[id]/download/route.ts`, `components/documents/DocumentDownloadButton.tsx`
 - **Features**:
-    - Download original documents
-    - Download signed PDFs (with approval stamps)
-    - Download Word documents with signatures
-    - Download approval reports (CSV)
-    - Automatic filename generation
-    - Access control (only submitter, org users, or admins can download)
+  - Download original documents
+  - Download signed PDFs (with approval stamps)
+  - Download Word documents with signatures
+  - Download approval reports (CSV)
+  - Automatic filename generation
+  - Access control (only submitter, org users, or admins can download)
 
 ### 5. **Database Schema Updates** ✓
 
 - **Models Added**:
-    - `DocumentSignature` - Stores signature data and metadata
-    - `ApprovalMetadata` - Tracks approval information
-    - `UserLanguagePreference` - User language preferences
-    - `EmailLog` - Email sending logs and status
-    - `AuditTrail` - Comprehensive audit logging
+  - `DocumentSignature` - Stores signature data and metadata
+  - `ApprovalMetadata` - Tracks approval information
+  - `UserLanguagePreference` - User language preferences
+  - `EmailLog` - Email sending logs and status
+  - `AuditTrail` - Comprehensive audit logging
 
 ### 6. **Integration with Workflow Engine** ✓
 
 - The workflow engine (`lib/workflow/engine.ts`) now:
-    - Sends email notifications on document submission
-    - Logs approval actions
-    - Triggers signature generation
-    - Updates document status
+  - Sends email notifications on document submission
+  - Logs approval actions
+  - Triggers signature generation
+  - Updates document status
 
 ---
 
